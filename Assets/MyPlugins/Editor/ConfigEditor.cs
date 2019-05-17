@@ -2,19 +2,29 @@
 using UnityEngine;
 using System.Collections;
 using System.Xml;
+using System.Collections.Generic;
+using System.IO;
 
-public class ConfigEditor : Editor {
-
-	[MenuItem("配置/生成", false)]
-    public static void CreateConfigFiles()
+namespace Editor.Config
+{
+    public class ConfigEditor : UnityEditor.Editor
     {
-        string path = Application.dataPath + "/Resources/Config/City.xml";
 
-        ConfigLoaderXml loader = new ConfigLoaderXml();
-        ConfigLoaderData loaderData = loader.Loader(path);
+        [MenuItem("配置/生成", false)]
+        public static void CreateConfigFiles()
+        {
+            string path = Application.dataPath + "/Resources/Config/City.xml";
 
-        ConfigAnalyzer analyzer = new ConfigAnalyzer();
-        analyzer.Analysis(loaderData);
+            LoaderXml loader = new LoaderXml();
+            LoaderData loaderData = loader.Loader(path);
+
+            Analyzer analyzer = new Analyzer();
+            List<Dictionary<string, ItemData>> analysisData = analyzer.Analysis(loaderData);
+
+            ExporterCSharp exporter = new ExporterCSharp(Application.dataPath + "/Scripts/Config/" + Path.GetFileNameWithoutExtension(path) + ".cs", analysisData);
+            exporter.Export();
+        }
+
     }
 
 }
