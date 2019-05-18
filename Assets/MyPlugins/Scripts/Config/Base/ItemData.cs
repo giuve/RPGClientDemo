@@ -26,6 +26,11 @@ namespace Editor.Config
             return new KeyValuePair<string, string>(key, value);
         }
 
+        public string ExportCsParse()
+        {
+            return _format.ExportCsParse();
+        }
+
         public bool IsArrayType()
         {
             return _format is FormatArr;
@@ -34,6 +39,7 @@ namespace Editor.Config
         protected string _srcString;
         protected object _data;
         protected FormatBase _format;
+        public FormatBase Format { get { return _format; } }
 
         private static readonly string TEMPLATE_ATTRIBUTE_NORMAL = "private {0} _{1};";
         private static readonly string TEMPLATE_ATTRIBUTE_NORMAL_GET = "public {0} {1} {{ get {{ return _{2}; }} }}";

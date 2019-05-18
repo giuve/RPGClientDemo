@@ -21,8 +21,9 @@ namespace Editor.Config
             Analyzer analyzer = new Analyzer();
             List<Dictionary<string, ItemData>> analysisData = analyzer.Analysis(loaderData);
 
-            ExporterCSharp exporter = new ExporterCSharp(Application.dataPath + "/Scripts/Config/" + Path.GetFileNameWithoutExtension(path) + ".cs", analysisData);
+            ExporterCSharp exporter = new ExporterCSharp(Application.dataPath + "/Scripts/Config/" + Path.GetFileNameWithoutExtension(path) + "Config.cs", analysisData);
             exporter.Export();
+
         }
 
     }

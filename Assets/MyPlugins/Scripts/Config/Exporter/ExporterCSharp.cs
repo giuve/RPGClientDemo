@@ -21,7 +21,9 @@ namespace Editor.Config
                 return;
             }
             _fileStringList.Clear();
+
             //引用(using)
+            _fileStringList.Add(TEMPLATE_USING_XML);
             if (IsHaveArr())
             {
                 _fileStringList.Add(TEMPLATE_USING_COLLECTIONS);
@@ -37,6 +39,9 @@ namespace Editor.Config
             _fileStringList.Add(TEMPLATE_BRACKETS_HEAD);
             _tailStack.Push(TEMPLATE_BRACKETS_TAIL);
 
+            //构造方法和解析方法
+            ExportParseMethod();
+
             //各字段,只取第一行数据进行生成即可
             Dictionary<string, ItemData>.Enumerator iter = _data[0].GetEnumerator();
             while (iter.MoveNext())
@@ -46,7 +51,7 @@ namespace Editor.Config
                 _fileStringList.Add(pair.Key);
                 _fileStringList.Add(pair.Value);
             }
-
+            
             //收尾
             while (_tailStack.Count > 0)
             {
@@ -56,16 +61,51 @@ namespace Editor.Config
             //保存到文件上 
             base.Export();
         }
-        
+
+        public void ExportParseMethod()
+        {
+            //生成构造方法
+            _fileStringList.Add(string.Format(TEMPLATE_CONSTRUCTION_METHOD, Path.GetFileNameWithoutExtension(_path)));
+            _fileStringList.Add(TEMPLATE_BRACKETS_HEAD);
+            _fileStringList.Add(TEMPLATE_CALL_PARSE_METHOD);
+            _fileStringList.Add(TEMPLATE_BRACKETS_TAIL);
+
+            //生成解析函数
+            _fileStringList.Add(TEMPLATE_PARSE_METHOD);
+            _fileStringList.Add(TEMPLATE_BRACKETS_HEAD);
+
+            Dictionary<string, ItemData>.Enumerator iter = _data[0].GetEnumerator();
+            while (iter.MoveNext())
+            {
+                _fileStringList.Add(iter.Current.Value.ExportCsParse());
+            }
+
+            _fileStringList.Add(TEMPLATE_BRACKETS_TAIL);
+        }
+
         //C#文件模板
         //花括号
         private static readonly string TEMPLATE_BRACKETS_HEAD = "{";
         private static readonly string TEMPLATE_BRACKETS_TAIL = "}";
 
+        //引用
         private static readonly string TEMPLATE_USING_COLLECTIONS = "using System.Collections.Generic;";
+        private static readonly string TEMPLATE_USING_XML = "using System.Xml;";
+
+        //命名空间
         private static readonly string TEMPLATE_NAMESPACE = "namespace Game.Config";
-        private static readonly string TEMPLATE_CLASS_NAME = "public class {0}Config : BaseConfig";
-        
+
+        //类名
+        private static readonly string TEMPLATE_CLASS_NAME = "public class {0} : BaseConfig";
+
+        //构造方法
+        private static readonly string TEMPLATE_CONSTRUCTION_METHOD = "public {0}(XmlElement item)";
+
+        //调用Parse
+        private static readonly string TEMPLATE_CALL_PARSE_METHOD = "Parse(item);";
+
+        //解析方法
+        private static readonly string TEMPLATE_PARSE_METHOD = "private void Parse(XmlElement item)";
     }
 }
 
