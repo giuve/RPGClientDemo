@@ -19,6 +19,11 @@ namespace Editor.Config {
         {
             return Convert.ToSingle(src);
         }
+
+        public override string ExportCsXmlTo()
+        {
+            return "ToSingle";
+        }
     }
 }
 

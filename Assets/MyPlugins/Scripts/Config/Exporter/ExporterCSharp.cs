@@ -77,7 +77,7 @@ namespace Editor.Config
             Dictionary<string, ItemData>.Enumerator iter = _data[0].GetEnumerator();
             while (iter.MoveNext())
             {
-                _fileStringList.Add(iter.Current.Value.ExportCsParse());
+                _fileStringList.AddRange(iter.Current.Value.ExportCsParse());
             }
 
             _fileStringList.Add(TEMPLATE_BRACKETS_TAIL);
@@ -85,8 +85,8 @@ namespace Editor.Config
 
         //C#文件模板
         //花括号
-        private static readonly string TEMPLATE_BRACKETS_HEAD = "{";
-        private static readonly string TEMPLATE_BRACKETS_TAIL = "}";
+        public static readonly string TEMPLATE_BRACKETS_HEAD = "{";
+        public static readonly string TEMPLATE_BRACKETS_TAIL = "}";
 
         //引用
         private static readonly string TEMPLATE_USING_COLLECTIONS = "using System.Collections.Generic;";

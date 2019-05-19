@@ -11,14 +11,19 @@ namespace Editor.Config
         {
         }
 
+        public override string ExportCsXmlTo()
+        {
+            return "ToInt64";
+        }
+
         protected override IList GetFinalList()
         {
             return new List<long>();
         }
 
-        public override string ExportCs()
+        protected override string getBaseType()
         {
-            return string.Format(base.ExportCs(), FormatFactory.DOC_FORMAT_TYPE_LONG);
+            return FormatFactory.DOC_FORMAT_TYPE_LONG;
         }
 
         protected override object ParseItem(string str)

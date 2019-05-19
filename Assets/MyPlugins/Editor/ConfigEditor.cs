@@ -23,7 +23,6 @@ namespace Editor.Config
 
             ExporterCSharp exporter = new ExporterCSharp(Application.dataPath + "/Scripts/Config/" + Path.GetFileNameWithoutExtension(path) + "Config.cs", analysisData);
             exporter.Export();
-
         }
 
     }

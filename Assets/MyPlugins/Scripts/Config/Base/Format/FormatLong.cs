@@ -19,6 +19,11 @@ namespace Editor.Config
         {
             return Convert.ToInt64(src);
         }
+
+        public override string ExportCsXmlTo()
+        {
+            return "ToInt64";
+        }
     }
 }
 

@@ -10,10 +10,14 @@ namespace Editor.Config
         public FormatArrInt(string itemName, int extCount) : base(itemName, extCount)
         {
         }
-
-        public override string ExportCs()
+        
+        protected override string getBaseType()
         {
-            return string.Format(base.ExportCs(), FormatFactory.DOC_FORMAT_TYPE_INT);
+            return FormatFactory.DOC_FORMAT_TYPE_INT;
+        }
+        public override string ExportCsXmlTo()
+        {
+            return "ToInt32";
         }
 
         protected override IList GetFinalList()

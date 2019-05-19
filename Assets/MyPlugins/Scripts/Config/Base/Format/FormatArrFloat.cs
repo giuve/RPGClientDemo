@@ -9,10 +9,15 @@ namespace Editor.Config {
         public FormatArrFloat(string itemName, int extCount) : base(itemName, extCount)
         {
         }
-
-        public override string ExportCs()
+        
+        protected override string getBaseType()
         {
-            return string.Format(base.ExportCs(), FormatFactory.DOC_FORMAT_TYPE_FLOAT);
+            return FormatFactory.DOC_FORMAT_TYPE_FLOAT;
+        }
+
+        public override string ExportCsXmlTo()
+        {
+            return "ToSingle";
         }
 
         protected override IList GetFinalList()

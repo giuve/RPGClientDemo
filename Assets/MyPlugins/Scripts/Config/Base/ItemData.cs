@@ -26,7 +26,7 @@ namespace Editor.Config
             return new KeyValuePair<string, string>(key, value);
         }
 
-        public string ExportCsParse()
+        public List<string> ExportCsParse()
         {
             return _format.ExportCsParse();
         }

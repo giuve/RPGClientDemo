@@ -22,9 +22,19 @@ namespace Editor.Config
             return str;
         }
 
-        public override string ExportCs()
+        protected override string getBaseType()
         {
-            return string.Format(base.ExportCs(), FormatFactory.DOC_FORMAT_TYPE_STRING);
+            return FormatFactory.DOC_FORMAT_TYPE_STRING;
+        }
+
+        public override string ExportCsXmlTo()
+        {
+            return "ToString";
+        }
+
+        protected override string GetParseCsConvert(int extCount)
+        {
+            return string.Format(TEMLATE_CS_PARSE_ARRAY_NO_CONVERT, Name, extCount, Name, extCount);
         }
     }
 

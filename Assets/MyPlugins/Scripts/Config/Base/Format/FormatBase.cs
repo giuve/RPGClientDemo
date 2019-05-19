@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System;
+using System.Collections.Generic;
 
 namespace Editor.Config
 {
@@ -14,7 +15,17 @@ namespace Editor.Config
         public abstract object Parse(string src);
 
         public abstract string ExportCs();
-        public abstract string ExportCsParse();
+
+        public virtual List<string> ExportCsParse()
+        {
+            List<string> list = new List<string>();
+            list.Add(string.Format(TEMLATE_CS_PARSE_ITEM, Name, ExportCsXmlTo(), Name));
+            return list;
+        }
+        public virtual string ExportCsXmlTo()
+        {
+            return "";
+        }
 
         public string Name { set; get; }
 

@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System;
+using System.Collections.Generic;
 
 namespace Editor.Config
 {
@@ -18,6 +19,12 @@ namespace Editor.Config
         public override object Parse(string src)
         {
             return src;
+        }
+        public override List<string> ExportCsParse()
+        {
+            List<string> list = new List<string>();
+            list.Add(string.Format("_{0} = item.GetAttribute(\"{1}\");", Name, Name));
+            return list;
         }
     }
 
