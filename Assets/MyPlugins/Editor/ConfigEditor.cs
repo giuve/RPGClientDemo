@@ -13,7 +13,7 @@ namespace Editor.Config
         [MenuItem("配置/生成", false)]
         public static void CreateConfigFiles()
         {
-            string path = Application.dataPath + "/Resources/Config/City.xml";
+            string path = "/Resources/Config/City.xml";
 
             LoaderXml loader = new LoaderXml();
             LoaderData loaderData = loader.Loader(path);
@@ -21,7 +21,7 @@ namespace Editor.Config
             Analyzer analyzer = new Analyzer();
             List<Dictionary<string, ItemData>> analysisData = analyzer.Analysis(loaderData);
 
-            ExporterCSharp exporter = new ExporterCSharp(Application.dataPath + "/Scripts/Config/" + Path.GetFileNameWithoutExtension(path) + "Config.cs", analysisData);
+            ExporterCSharp exporter = new ExporterCSharp(path, Application.dataPath + "/Scripts/Config/{0}.cs", analysisData);
             exporter.Export();
         }
 

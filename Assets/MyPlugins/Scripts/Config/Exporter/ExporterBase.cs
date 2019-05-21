@@ -5,25 +5,29 @@ using System.IO;
 
 namespace Editor.Config
 {
-    public class ExporterBase
+    public abstract class ExporterBase
     {
-        public ExporterBase(string path, List<Dictionary<string, ItemData>> data)
+        public ExporterBase(string srcPath, string tarPath, List<Dictionary<string, ItemData>> data)
         {
-            _path = path;
+            _srcPath = srcPath;
+            _tarPath = tarPath;
             _data = data;
         }
 
-        public virtual void Export()
+        public abstract void Export();
+   
+        protected void SaveFile()
         {
-            SaveFile();
+            SaveFile(_tarPath);
         }
-        public void SaveFile()
+
+        protected void SaveFile(string path)
         {
-            if(File.Exists(_path))
+            if(File.Exists(path))
             {
-                File.Delete(_path);
+                File.Delete(path);
             }
-            StreamWriter sw = new StreamWriter(_path);
+            StreamWriter sw = new StreamWriter(path);
             foreach(string str in _fileStringList)
             {
                 sw.WriteLine(str);
@@ -43,7 +47,8 @@ namespace Editor.Config
             return false;
         }
 
-        protected string _path;
+        protected string _srcPath;
+        protected string _tarPath;
         protected List<Dictionary<string, ItemData>> _data;
 
         //文件结尾，比如namespace、class等会有与之配对的结尾符号

@@ -11,6 +11,7 @@ namespace Editor.Config
 
         public override LoaderData Loader(string path)
         {
+            path = Application.dataPath + path;
             LoaderData ret = base.Loader(path);
 
             XmlDocument xml = new XmlDocument();
