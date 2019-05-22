@@ -2,7 +2,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Xml;
-using Editor.Config;
 
 namespace Game.Config
 {
@@ -31,7 +30,7 @@ namespace Game.Config
                 }
 
                 //只取第一行数据的名字
-                if (null == itemName && item.Name != FormatFactory.DOC_FORMAT_ITEM_NAME)
+                if (null == itemName && item.Name != "Format")
                 {
                     itemName = item.Name;
                 }

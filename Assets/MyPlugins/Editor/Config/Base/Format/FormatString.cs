@@ -11,9 +11,14 @@ namespace Editor.Config
         {
         }
 
-        public override string ExportCs()
+        public override string ToFormat()
         {
             return FormatFactory.DOC_FORMAT_TYPE_STRING;
+        }
+
+        public override string ExportCs()
+        {
+            return ToFormat();
         }
 
         public override object Parse(string src)

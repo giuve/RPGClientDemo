@@ -7,17 +7,17 @@ namespace Editor.Config
 {
     public class ExporterCSharp : ExporterBase
     {
-        public ExporterCSharp(string srcPath, string tarPath, List<Dictionary<string, ItemData>> data) 
-            :base(srcPath, tarPath, data)
+        public ExporterCSharp(AnalyzerData aData) 
+            :base(aData)
         {
 
         }
 
         public override void Export()
         {
-            if(null == _data || _data.Count <= 0)
+            if(null == _data || _data.Data.Count <= 0)
             {
-                CLog.LogErrorFormat("Export error: no data in path {0}", _tarPath);
+                CLog.LogErrorFormat("Export error: no data in path {0}", _data.TarPath);
                 return;
             }
             //CS要导出2个文件,ValueObject, ConfigDB
@@ -41,7 +41,7 @@ namespace Editor.Config
             _fileStringList.Add(TEMPLATE_BRACKETS_HEAD);
             _tailStack.Push(TEMPLATE_BRACKETS_TAIL);
 
-            string srcFileName = Path.GetFileNameWithoutExtension(_srcPath);
+            string srcFileName = Path.GetFileNameWithoutExtension(_data.SrcPath);
             //类名
             _fileStringList.Add(string.Format(TEMPLATE_VO_CLASS_NAME, srcFileName));
             _fileStringList.Add(TEMPLATE_BRACKETS_HEAD);
@@ -51,18 +51,16 @@ namespace Editor.Config
             ExportParseMethod();
 
             //各字段,只取第一行数据进行生成即可
-            Dictionary<string, ItemData>.Enumerator iter = _data[0].GetEnumerator();
+            Dictionary<string, FormatBase>.Enumerator iter = _data.Format.GetEnumerator();
             while (iter.MoveNext())
             {
                 //ID在基类中已定义，此处不用导出
-                if("ID" == iter.Current.Value.Format.Name)
+                if("ID" == iter.Current.Value.Name)
                 {
                     continue;
                 }
                 //导出的key是private字段，value是public的只读字段
-                KeyValuePair<string, string> pair = iter.Current.Value.ExportCs();
-                _fileStringList.Add(pair.Key);
-                _fileStringList.Add(pair.Value);
+                _fileStringList.AddRange(iter.Current.Value.ExportCsAttr());
             }
 
             //收尾
@@ -72,7 +70,7 @@ namespace Editor.Config
             }
 
             //保存到文件上 
-            SaveFile(string.Format(_tarPath, srcFileName+"Config"));
+            SaveFile(string.Format(_data.TarPath, srcFileName+"Config"));
         }
 
         private void ExportParseMethod()
@@ -87,7 +85,7 @@ namespace Editor.Config
             _fileStringList.Add(TEMPLATE_PARSE_METHOD);
             _fileStringList.Add(TEMPLATE_BRACKETS_HEAD);
 
-            Dictionary<string, ItemData>.Enumerator iter = _data[0].GetEnumerator();
+            Dictionary<string, FormatBase>.Enumerator iter = _data.Format.GetEnumerator();
             while (iter.MoveNext())
             {
                 _fileStringList.AddRange(iter.Current.Value.ExportCsParse());
@@ -110,7 +108,7 @@ namespace Editor.Config
             _fileStringList.Add(TEMPLATE_BRACKETS_HEAD);
             _tailStack.Push(TEMPLATE_BRACKETS_TAIL);
 
-            string srcFileName = Path.GetFileNameWithoutExtension(_srcPath);
+            string srcFileName = Path.GetFileNameWithoutExtension(_data.SrcPath);
 
             //类名
             _fileStringList.Add(string.Format(TEMPLATE_DB_CLASS_NAME, srcFileName));
@@ -118,7 +116,12 @@ namespace Editor.Config
             _tailStack.Push(TEMPLATE_BRACKETS_TAIL);
 
             //XML文件路径
-            _fileStringList.Add(string.Format(TEMLATE_DB_PATH, _srcPath));
+            string xmlSrcPath = _data.SrcPath;
+            if (!xmlSrcPath.EndsWith("xml"))
+            {
+                xmlSrcPath = Path.ChangeExtension(xmlSrcPath, "xml");
+            }
+            _fileStringList.Add(string.Format(TEMLATE_DB_PATH, xmlSrcPath));
             //字典声明
             _fileStringList.Add(string.Format(TEMPLATE_DB_DICT_STATEMENT, srcFileName));
 
@@ -164,7 +167,22 @@ namespace Editor.Config
             }
 
             //保存到文件上 
-            SaveFile(string.Format(_tarPath, srcFileName + "ConfigDB"));
+            SaveFile(string.Format(_data.TarPath, srcFileName + "ConfigDB"));
+        }
+        
+        protected void SaveFile(string path)
+        {
+            if (File.Exists(path))
+            {
+                File.Delete(path);
+            }
+            StreamWriter sw = new StreamWriter(path);
+            foreach (string str in _fileStringList)
+            {
+                sw.WriteLine(str);
+            }
+            sw.Flush();
+            sw.Close();
         }
 
         //C#文件模板

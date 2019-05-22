@@ -20,6 +20,11 @@ namespace Editor.Config
         {
             throw new NotImplementedException();
         }
+
+        public override string ToFormat()
+        {
+            throw new NotImplementedException();
+        }
     }
 }
 

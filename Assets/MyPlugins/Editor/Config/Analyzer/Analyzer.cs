@@ -8,7 +8,7 @@ namespace Editor.Config {
     public class Analyzer
     {
 
-        public List<Dictionary<string, ItemData>> Analysis(LoaderData data)
+        public AnalyzerData Analysis(LoaderData data)
         {
             /// 查检是否有格式数据
             /// 每行数据，属性的数量是否匹配
@@ -31,6 +31,7 @@ namespace Editor.Config {
             {
                 if (dict.Count != data.Format.Count)
                 {
+                    CLog.LogErrorFormat("Analyzer error: fomat count not match with data in file {0}", data.Path);
                     return null;
                 }
             }
@@ -80,7 +81,11 @@ namespace Editor.Config {
                 }
             }
 
-            return itemList;
+            AnalyzerData aData = new AnalyzerData();
+            aData.SrcPath = data.Path;
+            aData.Format = formatDict;
+            aData.Data = itemList;
+            return aData;
         }
 
 

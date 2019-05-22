@@ -12,7 +12,7 @@ namespace Editor.Config {
 
         public override string ExportCs()
         {
-            return FormatFactory.DOC_FORMAT_TYPE_FLOAT;
+            return ToFormat();
         }
 
         public override object Parse(string src)
@@ -23,6 +23,11 @@ namespace Editor.Config {
         public override string ExportCsXmlTo()
         {
             return "ToSingle";
+        }
+
+        public override string ToFormat()
+        {
+            return FormatFactory.DOC_FORMAT_TYPE_FLOAT;
         }
     }
 }

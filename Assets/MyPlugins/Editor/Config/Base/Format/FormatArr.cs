@@ -54,6 +54,21 @@ namespace Editor.Config
             return null;
         }
 
+        public string ToFormat(int extCount)
+        {
+            string str = "{0}";
+            for (int i = 0; i < extCount; i++)
+            {
+                str = string.Format(str, "arr({0})");
+            }
+            return str;
+        }
+
+        public override string ToFormat()
+        {
+            return string.Format(ToFormat(_extCount), getBaseType());
+        }
+
         public override string ExportCs()
         {
             return string.Format(ExportCs(_extCount), getBaseType());
